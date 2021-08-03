@@ -1,0 +1,21 @@
+{
+  "name": "scout",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:frederic2ec/scout.git",
+  "author": "frederic2ec <freddy.cho@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build:watch": "tsc --watch",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.10",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.10",
+    "lodash": "^4.17.21"
+  }
+}
