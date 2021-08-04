@@ -9,4 +9,4 @@ import Scout from './engines';
 
 export * from './engines';
 
-export { Results } from './interfaces';
+export * from './interfaces';

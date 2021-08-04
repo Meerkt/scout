@@ -3,12 +3,19 @@ import {
   EngineAutocompleteResult,
   EngineResult,
   ParsedResult,
+  SafeSearch,
   SearchEngine
 } from '../interfaces';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import * as xmljs from 'xml-js';
 import { Element } from 'xml-js';
+
+const Google_SS = {
+  [SafeSearch.Off]: 'off',
+  [SafeSearch.Medium]: 'medium',
+  [SafeSearch.High]: 'high'
+};
 
 class Google extends Engine {
   #url: URL = new URL('https://google.com/search');
@@ -18,11 +25,12 @@ class Google extends Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
-  constructor(query: string, page: number) {
-    super(query, page);
+  constructor(query: string, page: number, safesearch: SafeSearch) {
+    super(query, page, safesearch);
     this.#url.searchParams.set('q', query);
     this.#url.searchParams.set('ie', 'utf8');
     this.#url.searchParams.set('oe', 'utf8');
+    this.#url.searchParams.set('safe', Google_SS[safesearch]);
     this.#url.searchParams.set('start', String((page - 1) * 10));
     this.#autocompleteURL.searchParams.set('client', 'toolbar');
     this.#autocompleteURL.searchParams.set('q', query);

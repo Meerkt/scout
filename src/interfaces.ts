@@ -6,15 +6,23 @@ export enum SearchEngine {
   Bing
 }
 
+export enum SafeSearch {
+  Off,
+  Medium,
+  High
+}
+
 export class Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
   #query?: string;
   #page?: number;
+  #safesearch: SafeSearch;
 
-  constructor(query: string, page = 1) {
+  constructor(query: string, page = 1, safesearch = SafeSearch.Off) {
     this.#query = query;
     this.#page = page;
+    this.#safesearch = safesearch;
   }
   async search(): Promise<EngineResult> {
     console.error('Not implemented !');

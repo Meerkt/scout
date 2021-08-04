@@ -4,7 +4,8 @@ import {
   EngineAutocompleteResult,
   EngineResult,
   ParsedResult,
-  Results
+  Results,
+  SafeSearch
 } from '../interfaces';
 import * as _ from 'lodash';
 import DuckDuckGo from './duckduckgo';
@@ -22,17 +23,21 @@ class Scout {
   )[] = [Google, DuckDuckGo, Qwant, Bing, Yahoo];
   #query = '';
   #page = 1;
+  #safesearch = SafeSearch.Off;
 
-  constructor(query: string, page = 1) {
+  constructor(query: string, page = 1, safesearch = SafeSearch.Off) {
     this.#query = query;
     this.#page = page;
+    this.#safesearch = safesearch;
   }
 
   async search(): Promise<Results> {
     const executionTime = new Date();
     const promiseArray: Promise<EngineResult>[] = [];
     this.#engines.forEach((engine) => {
-      promiseArray.push(new engine(this.#query, this.#page).search());
+      promiseArray.push(
+        new engine(this.#query, this.#page, this.#safesearch).search()
+      );
     });
 
     const promiseResult = await Promise.all(promiseArray);
@@ -71,7 +76,9 @@ class Scout {
     const executionTime = new Date();
     const promiseArray: Promise<EngineAutocompleteResult>[] = [];
     this.#engines.forEach((engine) => {
-      promiseArray.push(new engine(this.#query, 1).autocomplete());
+      promiseArray.push(
+        new engine(this.#query, 1, SafeSearch.Off).autocomplete()
+      );
     });
 
     let results: string[] = [];
