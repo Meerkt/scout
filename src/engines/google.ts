@@ -2,7 +2,6 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
-  Infobox,
   Language,
   ParsedResult,
   SafeSearch,
@@ -67,6 +66,7 @@ class Google extends Engine {
 
       this.#suggestion = $('.card-section > a').first().text();
 
+      /*
       const infobox = $('div.osrp-blk').first();
 
       let infobox_result: Infobox | undefined = undefined;
@@ -85,7 +85,7 @@ class Google extends Engine {
           source,
           link
         };
-      }
+      }*/
 
       $('div[class="g"]').each((_, result) => {
         const $$ = cheerio.load($(result).toString());
@@ -105,8 +105,7 @@ class Google extends Engine {
       return {
         results: this.#results,
         suggestion: this.#suggestion,
-        error: false,
-        infobox: infobox_result
+        error: false
       };
     } catch {
       return {
