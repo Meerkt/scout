@@ -2,6 +2,7 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
+  Infobox,
   Language,
   ParsedResult,
   SafeSearch,
@@ -62,16 +63,36 @@ class Google extends Engine {
         }
       });
 
-      let $ = cheerio.load(request.data);
+      const $ = cheerio.load(request.data);
 
       this.#suggestion = $('.card-section > a').first().text();
 
-      $('div[class="g"]').each((_, result) => {
-        $ = cheerio.load($(result).toString());
+      const infobox = $('div.osrp-blk').first();
 
-        const title = $('h3').first().text().trim();
-        const link = $('div[class="yuRUbf"] > a').first().attr('href')?.trim();
-        const content = $('div[class="IsZvec"]').first().text().trim();
+      let infobox_result: Infobox | undefined = undefined;
+
+      if (infobox.length === 1) {
+        const $$ = cheerio.load($(infobox).toString());
+
+        const title = $$('h2 > span').first().text().trim();
+        const content = $$('.kno-rdesc > span').first().text().trim();
+        const source = $$('.kno-rdesc > span > a').first().text().trim();
+        const link = $$('.kno-rdesc > span > a').first().attr('href')?.trim();
+
+        infobox_result = {
+          title,
+          content,
+          source,
+          link
+        };
+      }
+
+      $('div[class="g"]').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const title = $$('h3').first().text().trim();
+        const link = $$('div[class="yuRUbf"] > a').first().attr('href')?.trim();
+        const content = $$('div[class="IsZvec"]').first().text().trim();
 
         this.#results.push({
           title,
@@ -84,7 +105,8 @@ class Google extends Engine {
       return {
         results: this.#results,
         suggestion: this.#suggestion,
-        error: false
+        error: false,
+        infobox: infobox_result
       };
     } catch {
       return {

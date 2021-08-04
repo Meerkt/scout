@@ -3,6 +3,7 @@ import {
   AutocompleteResults,
   EngineAutocompleteResult,
   EngineResult,
+  Infobox,
   Language,
   ParsedResult,
   Results,
@@ -57,6 +58,7 @@ class Scout {
 
     let results: ParsedResult[] = [];
     let suggestion: string | undefined;
+    let infobox: Infobox | undefined;
 
     promiseResult.forEach((prom) => {
       if (!prom.error) {
@@ -64,6 +66,11 @@ class Scout {
         if (!suggestion) {
           if (prom.suggestion || prom.suggestion?.length !== 0) {
             suggestion = prom.suggestion;
+          }
+        }
+        if (!infobox) {
+          if (prom.infobox !== undefined) {
+            infobox = prom.infobox;
           }
         }
       } else {
@@ -85,7 +92,8 @@ class Scout {
       results,
       suggestion: suggestion,
       times: `${new Date().valueOf() - executionTime.valueOf()} ms`,
-      length: results.length
+      length: results.length,
+      infobox
     };
   }
 

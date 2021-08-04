@@ -122,9 +122,17 @@ export interface ParsedResult {
   engine: SearchEngine;
 }
 
+export interface Infobox {
+  title: string;
+  content: string;
+  source: string;
+  link?: string;
+}
+
 export interface EngineResult {
   results: ParsedResult[];
   suggestion?: string;
+  infobox?: Infobox;
   error: boolean;
 }
 
@@ -138,6 +146,7 @@ export interface Results {
   suggestion?: string;
   length: number;
   times: string;
+  infobox?: Infobox;
 }
 
 export interface AutocompleteResults {
