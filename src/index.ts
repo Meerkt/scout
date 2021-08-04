@@ -1,7 +1,13 @@
 import Scout from './engines';
+import { Language, SafeSearch } from './interfaces';
 
 (async () => {
-  const result = await new Scout('youtube').search();
+  const result = await new Scout(
+    'youtube',
+    1,
+    SafeSearch.Off,
+    Language['fr-CA']
+  ).search();
   //const result = await new Scout('youtube').autocomplete();
 
   console.log(result);

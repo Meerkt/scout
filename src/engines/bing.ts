@@ -2,7 +2,9 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
+  Language,
   ParsedResult,
+  SafeSearch,
   SearchEngine
 } from '../interfaces';
 import axios from 'axios';
@@ -13,10 +15,23 @@ class Bing extends Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
-  constructor(query: string, page: number) {
+  constructor(
+    query: string,
+    page: number,
+    safesearch: SafeSearch,
+    language: Language
+  ) {
     super(query, page);
-    this.#url.searchParams.set('q', query);
-    this.#url.searchParams.set('offset', String((page - 1) * 10 + 1));
+
+    let lang = Language[language];
+    if (lang.split('-').length > 1) {
+      lang = lang.split('-')[0].toUpperCase();
+    } else {
+      lang = lang.toUpperCase();
+    }
+
+    this.#url.searchParams.set('q', `language:${lang} ${query}`);
+    this.#url.searchParams.set('first', String((page - 1) * 10 + 1));
   }
 
   async search(): Promise<EngineResult> {

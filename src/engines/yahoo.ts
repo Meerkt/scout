@@ -2,7 +2,9 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
+  Language,
   ParsedResult,
+  SafeSearch,
   SearchEngine
 } from '../interfaces';
 import axios from 'axios';
@@ -13,10 +15,22 @@ class Yahoo extends Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
-  constructor(query: string, page: number) {
+  constructor(
+    query: string,
+    page: number,
+    safesearch: SafeSearch,
+    language: Language
+  ) {
     super(query, page);
     this.#url.searchParams.set('p', query);
-    this.#url.searchParams.set('offset', String((page - 1) * 10 + 1));
+    this.#url.searchParams.set('b', String((page - 1) * 10 + 1));
+    let lang = Language[language];
+    if (lang.split('-').length > 1) {
+      lang = `lang_${lang.split('-')[0]}`;
+    } else {
+      lang = `lang_${lang}`;
+    }
+    this.#url.searchParams.set('vl', lang);
   }
 
   async search(): Promise<EngineResult> {

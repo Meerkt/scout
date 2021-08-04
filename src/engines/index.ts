@@ -3,6 +3,7 @@ import {
   AutocompleteResults,
   EngineAutocompleteResult,
   EngineResult,
+  Language,
   ParsedResult,
   Results,
   SafeSearch
@@ -24,11 +25,18 @@ class Scout {
   #query = '';
   #page = 1;
   #safesearch = SafeSearch.Off;
+  #language = Language.en;
 
-  constructor(query: string, page = 1, safesearch = SafeSearch.Off) {
+  constructor(
+    query: string,
+    page = 1,
+    safesearch = SafeSearch.Off,
+    language = Language.en
+  ) {
     this.#query = query;
     this.#page = page;
     this.#safesearch = safesearch;
+    this.#language = language;
   }
 
   async search(): Promise<Results> {
@@ -36,7 +44,12 @@ class Scout {
     const promiseArray: Promise<EngineResult>[] = [];
     this.#engines.forEach((engine) => {
       promiseArray.push(
-        new engine(this.#query, this.#page, this.#safesearch).search()
+        new engine(
+          this.#query,
+          this.#page,
+          this.#safesearch,
+          this.#language
+        ).search()
       );
     });
 
@@ -46,11 +59,15 @@ class Scout {
     let suggestion: string | undefined;
 
     promiseResult.forEach((prom) => {
-      results = results.concat(prom.results);
-      if (!suggestion) {
-        if (prom.suggestion || prom.suggestion?.length !== 0) {
-          suggestion = prom.suggestion;
+      if (!prom.error) {
+        results = results.concat(prom.results);
+        if (!suggestion) {
+          if (prom.suggestion || prom.suggestion?.length !== 0) {
+            suggestion = prom.suggestion;
+          }
         }
+      } else {
+        console.error(prom);
       }
     });
 
@@ -77,7 +94,7 @@ class Scout {
     const promiseArray: Promise<EngineAutocompleteResult>[] = [];
     this.#engines.forEach((engine) => {
       promiseArray.push(
-        new engine(this.#query, 1, SafeSearch.Off).autocomplete()
+        new engine(this.#query, 1, SafeSearch.Off, Language.en).autocomplete()
       );
     });
 

@@ -2,7 +2,9 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
+  Language,
   ParsedResult,
+  SafeSearch,
   SearchEngine
 } from '../interfaces';
 import axios from 'axios';
@@ -14,10 +16,23 @@ class Qwant extends Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
-  constructor(query: string, page: number) {
+  constructor(
+    query: string,
+    page: number,
+    safesearch: SafeSearch,
+    language: Language
+  ) {
     super(query, page);
     this.#url.searchParams.set('q', query);
-    this.#url.searchParams.set('offset', String((page - 1) * 10));
+    this.#url.searchParams.set('p', String(page));
+    let lang = Language[language].toLowerCase();
+    if (lang.split('-').length > 1) {
+      const split = lang.split('-');
+      lang = `${split[0]}_${split[1]}`;
+    } else {
+      lang = `${lang}_${lang}`;
+    }
+    this.#url.searchParams.set('locale', lang);
     this.#autocompleteURL.searchParams.set('q', query);
   }
 

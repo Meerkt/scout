@@ -2,7 +2,9 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
+  Language,
   ParsedResult,
+  SafeSearch,
   SearchEngine
 } from '../interfaces';
 import axios from 'axios';
@@ -14,9 +16,22 @@ class DuckDuckGo extends Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
-  constructor(query: string) {
+  constructor(
+    query: string,
+    page: number,
+    safesearch: SafeSearch,
+    language: Language
+  ) {
     super(query);
     this.#url.searchParams.set('q', query);
+    let lang = Language[language].toLowerCase();
+    if (lang.split('-').length > 1) {
+      const split = lang.split('-');
+      lang = `${split[1]}-${split[0]}`;
+    } else {
+      lang = `${lang}-${lang}`;
+    }
+    this.#url.searchParams.set('kl', lang);
     this.#autocompleteURL.searchParams.set('q', query);
     this.#autocompleteURL.searchParams.set('type', 'list');
   }

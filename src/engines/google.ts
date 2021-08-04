@@ -2,6 +2,7 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineResult,
+  Language,
   ParsedResult,
   SafeSearch,
   SearchEngine
@@ -25,13 +26,28 @@ class Google extends Engine {
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
-  constructor(query: string, page: number, safesearch: SafeSearch) {
+  constructor(
+    query: string,
+    page: number,
+    safesearch: SafeSearch,
+    language: Language
+  ) {
     super(query, page, safesearch);
     this.#url.searchParams.set('q', query);
     this.#url.searchParams.set('ie', 'utf8');
     this.#url.searchParams.set('oe', 'utf8');
     this.#url.searchParams.set('safe', Google_SS[safesearch]);
     this.#url.searchParams.set('start', String((page - 1) * 10));
+
+    let lang = Language[language];
+    if (lang.split('-').length > 1) {
+      lang = `lang_${lang.split('-')[0]}`;
+    } else {
+      lang = `lang_${lang}`;
+    }
+
+    this.#url.searchParams.set('lr', lang);
+    this.#url.searchParams.set('hl', lang.split('_')[1]);
     this.#autocompleteURL.searchParams.set('client', 'toolbar');
     this.#autocompleteURL.searchParams.set('q', query);
   }
