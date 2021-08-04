@@ -1,12 +1,12 @@
-import Scout from "./engines";
+import Scout from './engines';
 
+(async () => {
+  const result = await new Scout('youtube').search();
+  //const result = await new Scout('youtube').autocomplete();
 
-(async() => {
-    const result = await new Scout('youtube').search()
+  console.log(result);
+})();
 
-    console.log(result)
-})()
+export * from './engines';
 
-export * from "./engines"
-
-export {Results} from "./interfaces"
+export { Results } from './interfaces';

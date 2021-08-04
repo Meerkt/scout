@@ -1,39 +1,62 @@
 export enum SearchEngine {
-    Google,
-    DuckDuckGo,
-    Yahoo,
-    Qwant,
-    Bing
+  Google,
+  DuckDuckGo,
+  Yahoo,
+  Qwant,
+  Bing
 }
 
 export class Engine {
-    #results: ParsedResult[] = []
-    #suggestion?: string
-    #query?: string
+  #results: ParsedResult[] = [];
+  #suggestion?: string;
+  #query?: string;
+  #page?: number;
 
-    constructor(query: string) {
-        this.#query = query
-    }
-    async search(): Promise<EngineResult> {
-        return { results: this.#results, suggestion: this.#suggestion }
-    }
+  constructor(query: string, page = 1) {
+    this.#query = query;
+    this.#page = page;
+  }
+  async search(): Promise<EngineResult> {
+    console.error('Not implemented !');
+    return {
+      results: this.#results,
+      suggestion: this.#suggestion,
+      error: false
+    };
+  }
+  async autocomplete(): Promise<EngineAutocompleteResult> {
+    console.error('Not implemented ! ');
+    return { results: [], error: false };
+  }
 }
 
 export interface ParsedResult {
-    title: string
-    link?: string,
-    content: string,
-    engine: SearchEngine
+  title: string;
+  link?: string;
+  content: string;
+  engine: SearchEngine;
 }
 
 export interface EngineResult {
-    results: ParsedResult[]
-    suggestion?: string,
+  results: ParsedResult[];
+  suggestion?: string;
+  error: boolean;
+}
+
+export interface EngineAutocompleteResult {
+  results: string[];
+  error: boolean;
 }
 
 export interface Results {
-    results: ParsedResult[],
-    suggestion?: string
-    length: number
-    times: string
+  results: ParsedResult[];
+  suggestion?: string;
+  length: number;
+  times: string;
+}
+
+export interface AutocompleteResults {
+  results: string[];
+  times: string;
+  length: number;
 }
