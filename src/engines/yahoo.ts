@@ -21,7 +21,7 @@ class Yahoo extends Engine {
     safesearch: SafeSearch,
     language: Language
   ) {
-    super(query, page);
+    super(query, page, safesearch, language);
     this.#url.searchParams.set('p', query);
     this.#url.searchParams.set('b', String((page - 1) * 10 + 1));
     let lang = Language[language];

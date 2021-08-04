@@ -22,7 +22,7 @@ class DuckDuckGo extends Engine {
     safesearch: SafeSearch,
     language: Language
   ) {
-    super(query);
+    super(query, page, safesearch, language);
     this.#url.searchParams.set('q', query);
     let lang = Language[language].toLowerCase();
     if (lang.split('-').length > 1) {

@@ -22,7 +22,7 @@ class Qwant extends Engine {
     safesearch: SafeSearch,
     language: Language
   ) {
-    super(query, page);
+    super(query, page, safesearch, language);
     this.#url.searchParams.set('q', query);
     this.#url.searchParams.set('p', String(page));
     let lang = Language[language].toLowerCase();

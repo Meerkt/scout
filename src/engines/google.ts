@@ -32,7 +32,7 @@ class Google extends Engine {
     safesearch: SafeSearch,
     language: Language
   ) {
-    super(query, page, safesearch);
+    super(query, page, safesearch, language);
     this.#url.searchParams.set('q', query);
     this.#url.searchParams.set('ie', 'utf8');
     this.#url.searchParams.set('oe', 'utf8');

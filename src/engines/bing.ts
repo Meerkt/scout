@@ -21,7 +21,7 @@ class Bing extends Engine {
     safesearch: SafeSearch,
     language: Language
   ) {
-    super(query, page);
+    super(query, page, safesearch, language);
 
     let lang = Language[language];
     if (lang.split('-').length > 1) {
