@@ -104,11 +104,17 @@ export class Engine {
   async search(): Promise<EngineResult> {
     console.error('Not implemented !');
     return {
-      results: this.#results,
-      suggestion: this.#suggestion,
+      results: [],
+      suggestion: undefined,
       error: false
     };
   }
+
+  async search_image(): Promise<EngineImagesResult> {
+    console.error('Not implemented !');
+    return { results: [], error: false };
+  }
+
   async autocomplete(): Promise<EngineAutocompleteResult> {
     console.error('Not implemented ! ');
     return { results: [], error: false };
@@ -151,6 +157,24 @@ export interface Results {
 
 export interface AutocompleteResults {
   results: string[];
+  times: string;
+  length: number;
+}
+
+export interface Images {
+  title: string;
+  thumbnail?: string;
+  image?: string;
+  url?: string;
+}
+
+export interface EngineImagesResult {
+  results: Images[];
+  error: boolean;
+}
+
+export interface ImageResults {
+  results: Images[];
   times: string;
   length: number;
 }

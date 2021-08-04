@@ -1,7 +1,9 @@
 import {
   Engine,
   EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
+  Images,
   Language,
   ParsedResult,
   SafeSearch,
@@ -113,6 +115,41 @@ class Google extends Engine {
         suggestion: undefined,
         error: true
       };
+    }
+  }
+
+  async search_image(): Promise<EngineImagesResult> {
+    this.#url.searchParams.set('tbm', 'isch');
+    try {
+      const request = await axios.get(this.#url.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+      const results: Images[] = [];
+
+      $('td.e3goi').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const title = $$('span.fYyStc').first().text().trim();
+        const thumbnail = $$('img.yWs4tf').first().attr('src');
+        const link = $$('a').first().attr('href');
+        const url =
+          new URL(`https://google.com${link}`).searchParams.get('url') ||
+          undefined;
+        results.push({
+          url: url,
+          title: title,
+          thumbnail: thumbnail,
+          image: thumbnail
+        });
+      });
+      return { results: results, error: false };
+    } catch {
+      return { results: [], error: true };
     }
   }
 

@@ -2,7 +2,10 @@ import Google from './google';
 import {
   AutocompleteResults,
   EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
+  ImageResults,
+  Images,
   Infobox,
   Language,
   ParsedResult,
@@ -93,9 +96,40 @@ class Scout {
     return {
       results,
       suggestion: suggestion,
+      infobox,
       times: `${new Date().valueOf() - executionTime.valueOf()} ms`,
-      length: results.length,
-      infobox
+      length: results.length
+    };
+  }
+
+  async search_image(): Promise<ImageResults> {
+    const executionTime = new Date();
+    const promiseArray: Promise<EngineImagesResult>[] = [];
+    this.#engines.forEach((engine) => {
+      promiseArray.push(
+        new engine(
+          this.#query,
+          this.#page,
+          this.#safesearch,
+          this.#language
+        ).search_image()
+      );
+    });
+
+    const promiseResult = await Promise.all(promiseArray);
+
+    let results: Images[] = [];
+
+    promiseResult.forEach((prom) => {
+      results = results.concat(prom.results);
+    });
+
+    results = _.uniqBy(results, 'url');
+
+    return {
+      results: results,
+      times: `${new Date().valueOf() - executionTime.valueOf()} ms`,
+      length: results.length
     };
   }
 

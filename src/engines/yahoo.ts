@@ -1,7 +1,9 @@
 import {
   Engine,
   EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
+  Images,
   Language,
   ParsedResult,
   SafeSearch,
@@ -12,6 +14,7 @@ import * as cheerio from 'cheerio';
 
 class Yahoo extends Engine {
   #url: URL = new URL('https://search.yahoo.com/search');
+  #imageURL: URL = new URL('https://images.search.yahoo.com/images/search');
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
@@ -31,6 +34,10 @@ class Yahoo extends Engine {
       lang = `lang_${lang}`;
     }
     this.#url.searchParams.set('vl', lang);
+
+    this.#imageURL.searchParams.set('p', query);
+    this.#imageURL.searchParams.set('b', String((page - 1) * 10 + 1));
+    this.#imageURL.searchParams.set('vl', lang);
   }
 
   async search(): Promise<EngineResult> {
@@ -70,6 +77,42 @@ class Yahoo extends Engine {
       return {
         results: [],
         suggestion: undefined,
+        error: true
+      };
+    }
+  }
+
+  async search_image(): Promise<EngineImagesResult> {
+    try {
+      const request = await axios.get(this.#imageURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+
+      const results: Images[] = [];
+
+      $('li.ld').each((_, result) => {
+        const data = JSON.parse(result.attribs['data']);
+        results.push({
+          url: data.rurl,
+          title: data.alt,
+          thumbnail: data.ith,
+          image: data.iurl
+        });
+      });
+
+      return {
+        results: results,
+        error: false
+      };
+    } catch {
+      return {
+        results: [],
         error: true
       };
     }

@@ -1,5 +1,7 @@
 import {
   Engine,
+  EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
   Infobox,
   Language,
@@ -55,6 +57,14 @@ class Wikipedia extends Engine {
         error: true
       };
     }
+  }
+
+  async search_image(): Promise<EngineImagesResult> {
+    return { results: [], error: false };
+  }
+
+  async autocomplete(): Promise<EngineAutocompleteResult> {
+    return { results: [], error: false };
   }
 }
 

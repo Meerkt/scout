@@ -1,7 +1,9 @@
 import {
   Engine,
   EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
+  Images,
   Language,
   ParsedResult,
   SafeSearch,
@@ -12,6 +14,10 @@ import * as cheerio from 'cheerio';
 
 class Qwant extends Engine {
   #url: URL = new URL('https://lite.qwant.com/');
+  #imageURL: URL = new URL(
+    'https://api.qwant.com/v3/search/images?count=10&offset=0' +
+      '&q=youtube&t=images&locale=en_CA'
+  );
   #autocompleteURL = new URL('https://api.qwant.com/api/suggest');
   #results: ParsedResult[] = [];
   #suggestion?: string;
@@ -33,6 +39,13 @@ class Qwant extends Engine {
       lang = `${lang}_${lang}`;
     }
     this.#url.searchParams.set('locale', lang);
+
+    this.#imageURL.searchParams.set('count', String(10));
+    this.#imageURL.searchParams.set('offset', String((page - 1) * 10));
+    this.#imageURL.searchParams.set('locale', lang);
+    this.#imageURL.searchParams.set('t', 'images');
+    this.#imageURL.searchParams.set('q', query);
+
     this.#autocompleteURL.searchParams.set('q', query);
   }
 
@@ -74,6 +87,33 @@ class Qwant extends Engine {
         suggestion: undefined,
         error: true
       };
+    }
+  }
+
+  async search_image(): Promise<EngineImagesResult> {
+    try {
+      const request = await axios.get(this.#imageURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      const results: Images[] = [];
+
+      request.data.data.result.items.forEach((item: any) => {
+        results.push({
+          url: item.url,
+          title: item.title,
+          thumbnail: item.thumbnail,
+          image: item.media
+        });
+      });
+
+      return { results: results, error: false };
+    } catch {
+      return { results: [], error: true };
     }
   }
 

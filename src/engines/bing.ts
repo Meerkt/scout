@@ -1,6 +1,7 @@
 import {
   Engine,
   EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
   Language,
   ParsedResult,
@@ -12,6 +13,7 @@ import * as cheerio from 'cheerio';
 
 class Bing extends Engine {
   #url: URL = new URL('https://www.bing.com/search');
+  #imageURL: URL = new URL('https://www.bing.com/images/search');
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
@@ -32,6 +34,10 @@ class Bing extends Engine {
 
     this.#url.searchParams.set('q', `language:${lang} ${query}`);
     this.#url.searchParams.set('first', String((page - 1) * 10 + 1));
+
+    this.#imageURL.searchParams.set('q', `language:${lang} ${query}`);
+    this.#imageURL.searchParams.set('first', String((page - 1) * 10 + 1));
+    this.#imageURL.searchParams.set('tsc', 'ImageHoverTitle');
   }
 
   async search(): Promise<EngineResult> {
@@ -73,6 +79,36 @@ class Bing extends Engine {
         error: true
       };
     }
+  }
+
+  async search_image(): Promise<EngineImagesResult> {
+    // Bing return NSFW stuff, so skipping until it's fixed
+    /*try {
+      const request = await axios.get(this.#imageURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+
+      $('div.item').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const image = $$('a.thumb').first().attr('href');
+        const thumbnail = $$('img').first().attr('src');
+        const link = $$('a.tit').first().attr('href');
+        const title = $$('div.des').first().text().trim();
+
+        console.log(title);
+      });
+
+      return { results: [], error: false };
+    } catch {
+      return { results: [], error: true };
+    }*/
+    return { results: [], error: false };
   }
 
   async autocomplete(): Promise<EngineAutocompleteResult> {

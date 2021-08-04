@@ -1,6 +1,7 @@
 import {
   Engine,
   EngineAutocompleteResult,
+  EngineImagesResult,
   EngineResult,
   Language,
   ParsedResult,
@@ -75,6 +76,10 @@ class DuckDuckGo extends Engine {
         error: true
       };
     }
+  }
+
+  async search_image(): Promise<EngineImagesResult> {
+    return { results: [], error: false };
   }
 
   async autocomplete(): Promise<EngineAutocompleteResult> {
