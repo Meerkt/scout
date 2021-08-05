@@ -144,7 +144,7 @@ class Bing extends Engine {
     return { results: [], error: false };
   }
 
-  async search_videos(): Promise<EngineNewsResult> {
+  async search_news(): Promise<EngineNewsResult> {
     // Bing return NSFW/nonsense stuff, so skipping for now
     return { results: [], error: false };
   }
