@@ -4,13 +4,15 @@ import {
   EngineAutocompleteResult,
   EngineImagesResult,
   EngineResult,
+  EngineVideosResult,
   ImageResults,
   Images,
   Infobox,
   Language,
   ParsedResult,
   Results,
-  SafeSearch
+  SafeSearch,
+  Videos
 } from '../interfaces';
 import * as _ from 'lodash';
 import DuckDuckGo from './duckduckgo';
@@ -131,6 +133,31 @@ class Scout {
       times: `${new Date().valueOf() - executionTime.valueOf()} ms`,
       length: results.length
     };
+  }
+
+  async search_video(): Promise<boolean> {
+    //const executionTime = new Date();
+    const promiseArray: Promise<EngineVideosResult>[] = [];
+    this.#engines.forEach((engine) => {
+      promiseArray.push(
+        new engine(
+          this.#query,
+          this.#page,
+          this.#safesearch,
+          this.#language
+        ).search_video()
+      );
+    });
+
+    const promiseResult = await Promise.all(promiseArray);
+
+    let results: Videos[] = [];
+
+    promiseResult.forEach((prom) => {
+      results = results.concat(prom.results);
+    });
+
+    return true;
   }
 
   async autocomplete(): Promise<AutocompleteResults> {

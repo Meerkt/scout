@@ -3,21 +3,26 @@ import {
   EngineAutocompleteResult,
   EngineImagesResult,
   EngineResult,
+  EngineVideosResult,
   Images,
   Language,
   ParsedResult,
   SafeSearch,
-  SearchEngine
+  SearchEngine,
+  Videos
 } from '../interfaces';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+const QWANT_SS = {
+  [SafeSearch.Off]: 0,
+  [SafeSearch.Medium]: 1,
+  [SafeSearch.High]: 2
+};
 
 class Qwant extends Engine {
   #url: URL = new URL('https://lite.qwant.com/');
-  #imageURL: URL = new URL(
-    'https://api.qwant.com/v3/search/images?count=10&offset=0' +
-      '&q=youtube&t=images&locale=en_CA'
-  );
+  #imageURL: URL = new URL('https://api.qwant.com/v3/search/images');
+  #videoURL: URL = new URL('https://api.qwant.com/v3/search/videos');
   #autocompleteURL = new URL('https://api.qwant.com/api/suggest');
   #results: ParsedResult[] = [];
   #suggestion?: string;
@@ -45,6 +50,14 @@ class Qwant extends Engine {
     this.#imageURL.searchParams.set('locale', lang);
     this.#imageURL.searchParams.set('t', 'images');
     this.#imageURL.searchParams.set('q', query);
+    this.#imageURL.searchParams.set('safesearch', String(QWANT_SS[safesearch]));
+
+    this.#videoURL.searchParams.set('count', String(10));
+    this.#videoURL.searchParams.set('offset', String((page - 1) * 10));
+    this.#videoURL.searchParams.set('locale', lang);
+    this.#videoURL.searchParams.set('t', 'videos');
+    this.#videoURL.searchParams.set('q', query);
+    this.#videoURL.searchParams.set('safesearch', String(QWANT_SS[safesearch]));
 
     this.#autocompleteURL.searchParams.set('q', query);
   }
@@ -102,16 +115,46 @@ class Qwant extends Engine {
 
       const results: Images[] = [];
 
-      request.data.data.result.items.forEach((item: any) => {
+      request.data.data.result.items.forEach(
+        (item: { media: string } & Images) => {
+          results.push({
+            url: item.url,
+            title: item.title,
+            thumbnail: item.thumbnail,
+            image: item.media
+          });
+        }
+      );
+
+      return { results: results, error: false };
+    } catch {
+      return { results: [], error: true };
+    }
+  }
+
+  async search_video(): Promise<EngineVideosResult> {
+    try {
+      const request = await axios.get(this.#videoURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      const results: Videos[] = [];
+
+      request.data.data.result.items.forEach((item: Video) => {
         results.push({
-          url: item.url,
-          title: item.title,
           thumbnail: item.thumbnail,
-          image: item.media
+          title: item.title,
+          desc: item.desc,
+          source: item.source,
+          url: item.url
         });
       });
 
-      return { results: results, error: false };
+      return { results, error: false };
     } catch {
       return { results: [], error: true };
     }

@@ -83,8 +83,6 @@ export enum Language {
 }
 
 export class Engine {
-  #results: ParsedResult[] = [];
-  #suggestion?: string;
   #query?: string;
   #page?: number;
   #safesearch: SafeSearch;
@@ -111,6 +109,11 @@ export class Engine {
   }
 
   async search_image(): Promise<EngineImagesResult> {
+    console.error('Not implemented !');
+    return { results: [], error: false };
+  }
+
+  async search_video(): Promise<EngineVideosResult> {
     console.error('Not implemented !');
     return { results: [], error: false };
   }
@@ -177,4 +180,17 @@ export interface ImageResults {
   results: Images[];
   times: string;
   length: number;
+}
+
+export interface Videos {
+  thumbnail: string;
+  url: string;
+  title: string;
+  source: string;
+  desc: string;
+}
+
+export interface EngineVideosResult {
+  results: Videos[];
+  error: boolean;
 }

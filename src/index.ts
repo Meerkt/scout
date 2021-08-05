@@ -9,12 +9,18 @@ import { Language, SafeSearch } from './interfaces';
   //   Language['fr-CA']
   // ).search();
   //const result = await new Scout('youtube').autocomplete();
+  // const result = await new Scout(
+  //   'youtube',
+  //   1,
+  //   SafeSearch.Off,
+  //   Language['en-CA']
+  // ).search_image();
   const result = await new Scout(
     'youtube',
     1,
     SafeSearch.Off,
     Language['en-CA']
-  ).search_image();
+  ).search_video();
 
   console.log(result);
 })();
