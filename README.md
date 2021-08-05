@@ -26,7 +26,7 @@
 const Scout = require('searchscout');
 
 (async () => {
-    // new Scout('query', page (optional), Safesearche (optional), Language (optional))
+    // new Scout('query', page (optional), Safesearch (optional), Language (optional))
     const scout = new Scout('node.js documentation', 1, SafeSearch.None, Language["en-US"])
 
     const results = await scout.search(); // Return an Results types
