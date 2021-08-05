@@ -144,7 +144,7 @@ class Qwant extends Engine {
 
       const results: Videos[] = [];
 
-      request.data.data.result.items.forEach((item: Video) => {
+      request.data.data.result.items.forEach((item: Videos) => {
         results.push({
           thumbnail: item.thumbnail,
           title: item.title,
