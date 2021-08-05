@@ -3,6 +3,7 @@ import {
   EngineAutocompleteResult,
   EngineImagesResult,
   EngineResult,
+  EngineVideosResult,
   Language,
   ParsedResult,
   SafeSearch,
@@ -14,6 +15,7 @@ import * as cheerio from 'cheerio';
 class Bing extends Engine {
   #url: URL = new URL('https://www.bing.com/search');
   #imageURL: URL = new URL('https://www.bing.com/images/search');
+  #videoURL: URL = new URL('https://www.bing.com/videos/search');
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
@@ -38,6 +40,9 @@ class Bing extends Engine {
     this.#imageURL.searchParams.set('q', `language:${lang} ${query}`);
     this.#imageURL.searchParams.set('first', String((page - 1) * 10 + 1));
     this.#imageURL.searchParams.set('tsc', 'ImageHoverTitle');
+
+    this.#videoURL.searchParams.set('q', `language:${lang} ${query}`);
+    this.#videoURL.searchParams.set('first', String((page - 1) * 10 + 1));
   }
 
   async search(): Promise<EngineResult> {
@@ -82,7 +87,7 @@ class Bing extends Engine {
   }
 
   async search_image(): Promise<EngineImagesResult> {
-    // Bing return NSFW stuff, so skipping until it's fixed
+    // Bing return NSFW/nonsense stuff, so skipping for now
     /*try {
       const request = await axios.get(this.#imageURL.toString(), {
         timeout: 2000,
@@ -100,6 +105,33 @@ class Bing extends Engine {
         const thumbnail = $$('img').first().attr('src');
         const link = $$('a.tit').first().attr('href');
         const title = $$('div.des').first().text().trim();
+
+        console.log(title);
+      });
+
+      return { results: [], error: false };
+    } catch {
+      return { results: [], error: true };
+    }*/
+    return { results: [], error: false };
+  }
+
+  async search_video(): Promise<EngineVideosResult> {
+    // Bing return NSFW/nonsense stuff, so skipping for now
+    /*try {
+      const request = await axios.get(this.#videoURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+
+      $('td.resultCell').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const title = $$('div.title').first().text().trim();
 
         console.log(title);
       });

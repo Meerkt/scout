@@ -12,6 +12,7 @@ import {
   ParsedResult,
   Results,
   SafeSearch,
+  VideoResults,
   Videos
 } from '../interfaces';
 import * as _ from 'lodash';
@@ -127,6 +128,13 @@ class Scout {
     });
 
     results = _.uniqBy(results, 'url');
+    results = _.filter(results, (result) => {
+      return (
+        result.title.length != 0 &&
+        result.url?.length != 0 &&
+        result.thumbnail?.length != 0
+      );
+    });
 
     return {
       results: results,
@@ -135,8 +143,8 @@ class Scout {
     };
   }
 
-  async search_video(): Promise<boolean> {
-    //const executionTime = new Date();
+  async search_video(): Promise<VideoResults> {
+    const executionTime = new Date();
     const promiseArray: Promise<EngineVideosResult>[] = [];
     this.#engines.forEach((engine) => {
       promiseArray.push(
@@ -157,7 +165,20 @@ class Scout {
       results = results.concat(prom.results);
     });
 
-    return true;
+    results = _.uniqBy(results, 'url');
+    results = _.filter(results, (result) => {
+      return (
+        result.title.length != 0 &&
+        result.url?.length != 0 &&
+        result.thumbnail.length != 0
+      );
+    });
+
+    return {
+      results: results,
+      times: `${new Date().valueOf() - executionTime.valueOf()} ms`,
+      length: results.length
+    };
   }
 
   async autocomplete(): Promise<AutocompleteResults> {

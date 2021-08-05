@@ -184,7 +184,7 @@ export interface ImageResults {
 
 export interface Videos {
   thumbnail: string;
-  url: string;
+  url?: string;
   title: string;
   source: string;
   desc: string;
@@ -193,4 +193,10 @@ export interface Videos {
 export interface EngineVideosResult {
   results: Videos[];
   error: boolean;
+}
+
+export interface VideoResults {
+  results: Videos[];
+  times: string;
+  length: number;
 }

@@ -3,6 +3,7 @@ import {
   EngineAutocompleteResult,
   EngineImagesResult,
   EngineResult,
+  EngineVideosResult,
   Infobox,
   Language,
   SafeSearch
@@ -60,6 +61,10 @@ class Wikipedia extends Engine {
   }
 
   async search_image(): Promise<EngineImagesResult> {
+    return { results: [], error: false };
+  }
+
+  async search_video(): Promise<EngineVideosResult> {
     return { results: [], error: false };
   }
 

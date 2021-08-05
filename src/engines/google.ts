@@ -3,11 +3,13 @@ import {
   EngineAutocompleteResult,
   EngineImagesResult,
   EngineResult,
+  EngineVideosResult,
   Images,
   Language,
   ParsedResult,
   SafeSearch,
-  SearchEngine
+  SearchEngine,
+  Videos
 } from '../interfaces';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -145,6 +147,44 @@ class Google extends Engine {
           title: title,
           thumbnail: thumbnail,
           image: thumbnail
+        });
+      });
+      return { results: results, error: false };
+    } catch {
+      return { results: [], error: true };
+    }
+  }
+
+  async search_video(): Promise<EngineVideosResult> {
+    this.#url.searchParams.set('tbm', 'vid');
+    try {
+      const request = await axios.get(this.#url.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+      const results: Videos[] = [];
+
+      $('div.ezO2md').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const title = $$('span.CVA68e').first().text().trim();
+        const link = $$('a.fuLhoc').first().attr('href');
+        const url =
+          new URL(`https://google.com${link}`).searchParams.get('url') ||
+          undefined;
+        const thumbnail = $$('img.iUhyd').first().attr('src') || '';
+        const source = $$('span.fYyStc').first().text().trim().split(' ')[0];
+
+        results.push({
+          title,
+          url,
+          thumbnail,
+          source,
+          desc: source
         });
       });
       return { results: results, error: false };

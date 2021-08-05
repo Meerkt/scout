@@ -3,11 +3,13 @@ import {
   EngineAutocompleteResult,
   EngineImagesResult,
   EngineResult,
+  EngineVideosResult,
   Images,
   Language,
   ParsedResult,
   SafeSearch,
-  SearchEngine
+  SearchEngine,
+  Videos
 } from '../interfaces';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -15,6 +17,7 @@ import * as cheerio from 'cheerio';
 class Yahoo extends Engine {
   #url: URL = new URL('https://search.yahoo.com/search');
   #imageURL: URL = new URL('https://images.search.yahoo.com/images/search');
+  #videoURL: URL = new URL('https://video.search.yahoo.com/search/video');
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
@@ -38,6 +41,10 @@ class Yahoo extends Engine {
     this.#imageURL.searchParams.set('p', query);
     this.#imageURL.searchParams.set('b', String((page - 1) * 10 + 1));
     this.#imageURL.searchParams.set('vl', lang);
+
+    this.#videoURL.searchParams.set('p', query);
+    this.#videoURL.searchParams.set('b', String((page - 1) * 10 + 1));
+    this.#videoURL.searchParams.set('vl', lang);
   }
 
   async search(): Promise<EngineResult> {
@@ -103,6 +110,51 @@ class Yahoo extends Engine {
           title: data.alt,
           thumbnail: data.ith,
           image: data.iurl
+        });
+      });
+
+      return {
+        results: results,
+        error: false
+      };
+    } catch {
+      return {
+        results: [],
+        error: true
+      };
+    }
+  }
+
+  async search_video(): Promise<EngineVideosResult> {
+    try {
+      const request = await axios.get(this.#videoURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+
+      const results: Videos[] = [];
+
+      $('li.vr').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+        const vid = $$('a').first();
+
+        const url = vid.attr('data-rurl') || '';
+        const title = vid.attr('aria-label') || '';
+        const thumbnail = $$('img').first().attr('src') || '';
+        const source = $$('cite.url').first().text().trim();
+        const desc = $$('div.v-age').first().text().trim();
+
+        results.push({
+          url,
+          title,
+          thumbnail,
+          source,
+          desc
         });
       });
 
