@@ -2,6 +2,7 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineImagesResult,
+  EngineNewsResult,
   EngineResult,
   EngineVideosResult,
   Language,
@@ -140,6 +141,11 @@ class Bing extends Engine {
     } catch {
       return { results: [], error: true };
     }*/
+    return { results: [], error: false };
+  }
+
+  async search_videos(): Promise<EngineNewsResult> {
+    // Bing return NSFW/nonsense stuff, so skipping for now
     return { results: [], error: false };
   }
 

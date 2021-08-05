@@ -2,10 +2,12 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineImagesResult,
+  EngineNewsResult,
   EngineResult,
   EngineVideosResult,
   Images,
   Language,
+  News,
   ParsedResult,
   SafeSearch,
   SearchEngine,
@@ -185,6 +187,43 @@ class Google extends Engine {
           thumbnail,
           source,
           desc: source
+        });
+      });
+      return { results: results, error: false };
+    } catch {
+      return { results: [], error: true };
+    }
+  }
+
+  async search_news(): Promise<EngineNewsResult> {
+    this.#url.searchParams.set('tbm', 'nws');
+    try {
+      const request = await axios.get(this.#url.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+      const results: News[] = [];
+
+      $('div.ezO2md').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const title = $$('span.CVA68e').first().text().trim();
+        const thumbnail = $$('img.iUhyd').first().attr('src') || '';
+        const link = $$('a.fuLhoc').first().attr('href');
+        const url =
+          new URL(`https://google.com${link}`).searchParams.get('url') ||
+          undefined;
+        const source = $$('span.fYyStc').first().text().trim();
+
+        results.push({
+          title,
+          source,
+          url,
+          thumbnail
         });
       });
       return { results: results, error: false };

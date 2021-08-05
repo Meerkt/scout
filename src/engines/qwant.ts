@@ -2,10 +2,12 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineImagesResult,
+  EngineNewsResult,
   EngineResult,
   EngineVideosResult,
   Images,
   Language,
+  News,
   ParsedResult,
   SafeSearch,
   SearchEngine,
@@ -23,6 +25,7 @@ class Qwant extends Engine {
   #url: URL = new URL('https://lite.qwant.com/');
   #imageURL: URL = new URL('https://api.qwant.com/v3/search/images');
   #videoURL: URL = new URL('https://api.qwant.com/v3/search/videos');
+  #newsURL: URL = new URL('https://api.qwant.com/v3/search/news');
   #autocompleteURL = new URL('https://api.qwant.com/api/suggest');
   #results: ParsedResult[] = [];
   #suggestion?: string;
@@ -58,6 +61,13 @@ class Qwant extends Engine {
     this.#videoURL.searchParams.set('t', 'videos');
     this.#videoURL.searchParams.set('q', query);
     this.#videoURL.searchParams.set('safesearch', String(QWANT_SS[safesearch]));
+
+    this.#newsURL.searchParams.set('count', String(10));
+    this.#newsURL.searchParams.set('offset', String((page - 1) * 10));
+    this.#newsURL.searchParams.set('locale', lang);
+    this.#newsURL.searchParams.set('t', 'news');
+    this.#newsURL.searchParams.set('q', query);
+    this.#newsURL.searchParams.set('safesearch', String(QWANT_SS[safesearch]));
 
     this.#autocompleteURL.searchParams.set('q', query);
   }
@@ -153,6 +163,37 @@ class Qwant extends Engine {
           url: item.url
         });
       });
+
+      return { results, error: false };
+    } catch {
+      return { results: [], error: true };
+    }
+  }
+
+  async search_news(): Promise<EngineNewsResult> {
+    try {
+      const request = await axios.get(this.#newsURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      const results: News[] = [];
+
+      request.data.data.result.items.forEach(
+        (
+          item: { domain: string; media: { pict: { url: string } }[] } & News
+        ) => {
+          results.push({
+            title: item.title,
+            source: item.domain,
+            url: item.url,
+            thumbnail: item.media[0].pict.url
+          });
+        }
+      );
 
       return { results, error: false };
     } catch {

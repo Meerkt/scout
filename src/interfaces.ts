@@ -118,6 +118,11 @@ export class Engine {
     return { results: [], error: false };
   }
 
+  async search_news(): Promise<EngineNewsResult> {
+    console.error('Not implemented !');
+    return { results: [], error: false };
+  }
+
   async autocomplete(): Promise<EngineAutocompleteResult> {
     console.error('Not implemented ! ');
     return { results: [], error: false };
@@ -197,6 +202,24 @@ export interface EngineVideosResult {
 
 export interface VideoResults {
   results: Videos[];
+  times: string;
+  length: number;
+}
+
+export interface News {
+  thumbnail: string;
+  url?: string;
+  title: string;
+  source: string;
+}
+
+export interface EngineNewsResult {
+  results: News[];
+  error: boolean;
+}
+
+export interface NewsResults {
+  results: News[];
   times: string;
   length: number;
 }

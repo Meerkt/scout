@@ -15,12 +15,18 @@ import { Language, SafeSearch } from './interfaces';
   //   SafeSearch.Off,
   //   Language['en-CA']
   // ).search_image();
+  // const result = await new Scout(
+  //   'youtube',
+  //   1,
+  //   SafeSearch.Off,
+  //   Language['en-CA']
+  // ).search_video();
   const result = await new Scout(
     'youtube',
     1,
     SafeSearch.Off,
     Language['en-CA']
-  ).search_video();
+  ).search_news();
 
   console.log(result);
 })();

@@ -3,12 +3,15 @@ import {
   AutocompleteResults,
   EngineAutocompleteResult,
   EngineImagesResult,
+  EngineNewsResult,
   EngineResult,
   EngineVideosResult,
   ImageResults,
   Images,
   Infobox,
   Language,
+  News,
+  NewsResults,
   ParsedResult,
   Results,
   SafeSearch,
@@ -160,6 +163,44 @@ class Scout {
     const promiseResult = await Promise.all(promiseArray);
 
     let results: Videos[] = [];
+
+    promiseResult.forEach((prom) => {
+      results = results.concat(prom.results);
+    });
+
+    results = _.uniqBy(results, 'url');
+    results = _.filter(results, (result) => {
+      return (
+        result.title.length != 0 &&
+        result.url?.length != 0 &&
+        result.thumbnail.length != 0
+      );
+    });
+
+    return {
+      results: results,
+      times: `${new Date().valueOf() - executionTime.valueOf()} ms`,
+      length: results.length
+    };
+  }
+
+  async search_news(): Promise<NewsResults> {
+    const executionTime = new Date();
+    const promiseArray: Promise<EngineNewsResult>[] = [];
+    this.#engines.forEach((engine) => {
+      promiseArray.push(
+        new engine(
+          this.#query,
+          this.#page,
+          this.#safesearch,
+          this.#language
+        ).search_news()
+      );
+    });
+
+    const promiseResult = await Promise.all(promiseArray);
+
+    let results: News[] = [];
 
     promiseResult.forEach((prom) => {
       results = results.concat(prom.results);

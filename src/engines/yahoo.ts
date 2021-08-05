@@ -2,10 +2,12 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineImagesResult,
+  EngineNewsResult,
   EngineResult,
   EngineVideosResult,
   Images,
   Language,
+  News,
   ParsedResult,
   SafeSearch,
   SearchEngine,
@@ -13,11 +15,13 @@ import {
 } from '../interfaces';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import * as querystring from 'querystring';
 
 class Yahoo extends Engine {
   #url: URL = new URL('https://search.yahoo.com/search');
   #imageURL: URL = new URL('https://images.search.yahoo.com/images/search');
   #videoURL: URL = new URL('https://video.search.yahoo.com/search/video');
+  #newsURL: URL = new URL('https://news.search.yahoo.com/search');
   #results: ParsedResult[] = [];
   #suggestion?: string;
 
@@ -45,6 +49,10 @@ class Yahoo extends Engine {
     this.#videoURL.searchParams.set('p', query);
     this.#videoURL.searchParams.set('b', String((page - 1) * 10 + 1));
     this.#videoURL.searchParams.set('vl', lang);
+
+    this.#newsURL.searchParams.set('p', query);
+    this.#newsURL.searchParams.set('b', String((page - 1) * 10 + 1));
+    this.#newsURL.searchParams.set('vl', lang);
   }
 
   async search(): Promise<EngineResult> {
@@ -155,6 +163,49 @@ class Yahoo extends Engine {
           thumbnail,
           source,
           desc
+        });
+      });
+
+      return {
+        results: results,
+        error: false
+      };
+    } catch {
+      return {
+        results: [],
+        error: true
+      };
+    }
+  }
+
+  async search_news(): Promise<EngineNewsResult> {
+    try {
+      const request = await axios.get(this.#newsURL.toString(), {
+        timeout: 2000,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      const $ = cheerio.load(request.data);
+
+      const results: News[] = [];
+
+      $('li').each((_, result) => {
+        const $$ = cheerio.load($(result).toString());
+
+        const title = $$('a.thmb').first().attr('title') || '';
+        const thumbnail = $$('img').first().attr('src') || '';
+        const link = $$('a.thmb').first().attr('href')?.split('/')[7];
+        const url = String(querystring.decode(link || '').RU);
+        const source = $$('span.s-source').first().text().trim();
+
+        results.push({
+          title,
+          source,
+          url,
+          thumbnail
         });
       });
 

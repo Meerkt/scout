@@ -2,6 +2,7 @@ import {
   Engine,
   EngineAutocompleteResult,
   EngineImagesResult,
+  EngineNewsResult,
   EngineResult,
   EngineVideosResult,
   Infobox,
@@ -65,6 +66,10 @@ class Wikipedia extends Engine {
   }
 
   async search_video(): Promise<EngineVideosResult> {
+    return { results: [], error: false };
+  }
+
+  async search_news(): Promise<EngineNewsResult> {
     return { results: [], error: false };
   }
 
