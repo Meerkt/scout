@@ -1,14 +1,17 @@
 {
-  "name": "scout",
+  "name": "searchscout",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "repository": "git@github.com:frederic2ec/scout.git",
   "author": "frederic2ec <freddy.cho@hotmail.com>",
   "license": "MIT",
   "scripts": {
+    "prepublish": "npm run build",
     "lint": "eslint . --ext .ts --fix",
     "build:watch": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "doc": "typedoc src/index.ts --name Scout"
   },
   "devDependencies": {
     "@types/node": "^16.4.10",
@@ -18,6 +21,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.2",
+    "typedoc": "^0.21.5",
     "typescript": "^4.3.5"
   },
   "dependencies": {
