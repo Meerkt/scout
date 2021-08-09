@@ -1,6 +1,6 @@
 {
   "name": "searchscout",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:frederic2ec/scout.git",
@@ -14,6 +14,7 @@
     "doc": "typedoc src/index.ts --name Scout"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.172",
     "@types/node": "^16.4.10",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
