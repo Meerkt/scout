@@ -91,7 +91,7 @@ class Scout {
 
     results = _.uniqBy(results, 'link');
     results = _.uniqBy(results, 'title');
-    results = _.filter(results, (result) => {
+    results = _.filter(results, (result: ParsedResult) => {
       return (
         result.title.length != 0 &&
         result.link?.length != 0 &&
@@ -131,7 +131,7 @@ class Scout {
     });
 
     results = _.uniqBy(results, 'url');
-    results = _.filter(results, (result) => {
+    results = _.filter(results, (result: Images) => {
       return (
         result.title.length != 0 &&
         result.url?.length != 0 &&
@@ -169,7 +169,7 @@ class Scout {
     });
 
     results = _.uniqBy(results, 'url');
-    results = _.filter(results, (result) => {
+    results = _.filter(results, (result: Videos) => {
       return (
         result.title.length != 0 &&
         result.url?.length != 0 &&
@@ -207,11 +207,12 @@ class Scout {
     });
 
     results = _.uniqBy(results, 'url');
-    results = _.filter(results, (result) => {
+    results = _.filter(results, (result: News) => {
       return (
         result.title.length != 0 &&
         result.url?.length != 0 &&
-        result.thumbnail.length != 0
+        result.thumbnail.length != 0 &&
+        !result.thumbnail.startsWith('data:')
       );
     });
 

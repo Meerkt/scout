@@ -92,8 +92,8 @@
 				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">Scout</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;searchscout&#039;</span><span style="color: #000000">);</span>
 
 <span style="color: #000000">(</span><span style="color: #0000FF">async</span><span style="color: #000000"> () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #008000">// new Scout(&#039;query&#039;, page (optional), Safesearche (optional), Language (optional))</span>
-<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">scout</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Scout</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;node.js documentation&#039;</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #001080">SafeSearch</span><span style="color: #000000">.</span><span style="color: #001080">nONE</span><span style="color: #000000">, </span><span style="color: #001080">Language</span><span style="color: #000000">[</span><span style="color: #A31515">&quot;en-US&quot;</span><span style="color: #000000">])</span>
+<span style="color: #000000">    </span><span style="color: #008000">// new Scout(&#039;query&#039;, page (optional), Safesearch (optional), Language (optional))</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">scout</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Scout</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;node.js documentation&#039;</span><span style="color: #000000">, </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #001080">SafeSearch</span><span style="color: #000000">.</span><span style="color: #001080">None</span><span style="color: #000000">, </span><span style="color: #001080">Language</span><span style="color: #000000">[</span><span style="color: #A31515">&quot;en-US&quot;</span><span style="color: #000000">])</span>
 
 <span style="color: #000000">    </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">results</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">scout</span><span style="color: #000000">.</span><span style="color: #795E26">search</span><span style="color: #000000">(); </span><span style="color: #008000">// Return an Results types</span>
 
@@ -144,6 +144,9 @@
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/Engine.html" class="tsd-kind-icon">Engine</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/default.html" class="tsd-kind-icon">default</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/AutocompleteResults.html" class="tsd-kind-icon">Autocomplete<wbr>Results</a>
