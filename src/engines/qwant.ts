@@ -14,6 +14,7 @@ import {
   Videos
 } from '../interfaces';
 import axios from 'axios';
+
 const QWANT_SS = {
   [SafeSearch.Off]: 0,
   [SafeSearch.Medium]: 1,
@@ -142,7 +143,8 @@ class Qwant extends Engine {
             url: item.url,
             title: item.title,
             thumbnail: item.thumbnail,
-            image: item.media
+            image: item.media,
+            engine: SearchEngine.Qwant
           });
         }
       );
@@ -171,7 +173,8 @@ class Qwant extends Engine {
           title: item.title,
           desc: item.desc,
           source: item.source,
-          url: item.url
+          url: item.url,
+          engine: SearchEngine.Qwant
         });
       });
 
@@ -201,7 +204,8 @@ class Qwant extends Engine {
             title: item.title,
             source: item.domain,
             url: item.url,
-            thumbnail: item.media[0].pict.url
+            thumbnail: item.media[0].pict.url,
+            engine: SearchEngine.Qwant
           });
         }
       );

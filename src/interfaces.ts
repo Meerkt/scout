@@ -3,7 +3,8 @@ export enum SearchEngine {
   DuckDuckGo,
   Yahoo,
   Qwant,
-  Bing
+  Bing,
+  Wikipedia
 }
 
 export enum SafeSearch {
@@ -134,6 +135,7 @@ export interface Infobox {
   content: string;
   source: string;
   link?: string;
+  engine: SearchEngine;
 }
 
 export interface EngineResult {
@@ -167,6 +169,7 @@ export interface Images {
   thumbnail?: string;
   image?: string;
   url?: string;
+  engine: SearchEngine;
 }
 
 export interface EngineImagesResult {
@@ -186,6 +189,7 @@ export interface Videos {
   title: string;
   source: string;
   desc: string;
+  engine: SearchEngine;
 }
 
 export interface EngineVideosResult {
@@ -204,6 +208,7 @@ export interface News {
   url?: string;
   title: string;
   source: string;
+  engine: SearchEngine;
 }
 
 export interface EngineNewsResult {

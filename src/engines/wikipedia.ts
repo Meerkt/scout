@@ -7,7 +7,8 @@ import {
   EngineVideosResult,
   Infobox,
   Language,
-  SafeSearch
+  SafeSearch,
+  SearchEngine
 } from '../interfaces';
 import axios from 'axios';
 
@@ -43,7 +44,8 @@ class Wikipedia extends Engine {
         title: request.data.title,
         content: request.data.extract,
         link: request.data.content_urls.desktop.page,
-        source: 'Wikipedia'
+        source: 'Wikipedia',
+        engine: SearchEngine.Wikipedia
       };
 
       return {

@@ -117,7 +117,8 @@ class Yahoo extends Engine {
           url: data.rurl,
           title: data.alt,
           thumbnail: data.ith,
-          image: data.iurl
+          image: data.iurl,
+          engine: SearchEngine.Yahoo
         });
       });
 
@@ -162,7 +163,8 @@ class Yahoo extends Engine {
           title,
           thumbnail,
           source,
-          desc
+          desc,
+          engine: SearchEngine.Yahoo
         });
       });
 
@@ -205,7 +207,8 @@ class Yahoo extends Engine {
           title,
           source,
           url,
-          thumbnail
+          thumbnail,
+          engine: SearchEngine.Yahoo
         });
       });
 

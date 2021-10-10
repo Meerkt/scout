@@ -148,7 +148,8 @@ class Google extends Engine {
           url: url,
           title: title,
           thumbnail: thumbnail,
-          image: thumbnail
+          image: thumbnail,
+          engine: SearchEngine.Google
         });
       });
       return { results: results, error: false };
@@ -186,7 +187,8 @@ class Google extends Engine {
           url,
           thumbnail,
           source,
-          desc: source
+          desc: source,
+          engine: SearchEngine.Google
         });
       });
       return { results: results, error: false };
@@ -223,7 +225,8 @@ class Google extends Engine {
           title,
           source,
           url,
-          thumbnail
+          thumbnail,
+          engine: SearchEngine.Google
         });
       });
       return { results: results, error: false };
