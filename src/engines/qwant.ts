@@ -14,7 +14,6 @@ import {
   Videos
 } from '../interfaces';
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 const QWANT_SS = {
   [SafeSearch.Off]: 0,
   [SafeSearch.Medium]: 1,
@@ -22,13 +21,11 @@ const QWANT_SS = {
 };
 
 class Qwant extends Engine {
-  #url: URL = new URL('https://lite.qwant.com/');
+  #url: URL = new URL('https://api.qwant.com/v3/search/web');
   #imageURL: URL = new URL('https://api.qwant.com/v3/search/images');
   #videoURL: URL = new URL('https://api.qwant.com/v3/search/videos');
   #newsURL: URL = new URL('https://api.qwant.com/v3/search/news');
   #autocompleteURL = new URL('https://api.qwant.com/api/suggest');
-  #results: ParsedResult[] = [];
-  #suggestion?: string;
 
   constructor(
     query: string,
@@ -37,8 +34,7 @@ class Qwant extends Engine {
     language: Language
   ) {
     super(query, page, safesearch, language);
-    this.#url.searchParams.set('q', query);
-    this.#url.searchParams.set('p', String(page));
+    // Language
     let lang = Language[language].toLowerCase();
     if (lang.split('-').length > 1) {
       const split = lang.split('-');
@@ -46,7 +42,13 @@ class Qwant extends Engine {
     } else {
       lang = `${lang}_${lang}`;
     }
+
+    this.#url.searchParams.set('count', String(10));
+    this.#url.searchParams.set('offset', String((page - 1) * 10));
     this.#url.searchParams.set('locale', lang);
+    this.#url.searchParams.set('t', 'images');
+    this.#url.searchParams.set('q', query);
+    this.#url.searchParams.set('safesearch', String(QWANT_SS[safesearch]));
 
     this.#imageURL.searchParams.set('count', String(10));
     this.#imageURL.searchParams.set('offset', String((page - 1) * 10));
@@ -82,26 +84,35 @@ class Qwant extends Engine {
         }
       });
 
-      let $ = cheerio.load(request.data);
+      const results: ParsedResult[] = [];
 
-      $('article.web.result').each((_, result) => {
-        $ = cheerio.load($(result).toString());
+      request.data.data.result.items.mainline.forEach(
+        (mainline: {
+          type: string;
+          items: { title: string; url: string; desc: string }[];
+        }) => {
+          if (mainline.type === 'web') {
+            mainline.items.forEach((item) => {
+              results.push({
+                title: item.title,
+                link: item.url,
+                content: item.desc,
+                engine: SearchEngine.Qwant
+              });
+            });
+          }
+        }
+      );
 
-        const title = $('h2 > a').first().text().trim();
-        const link = $('p.url').first().text().trim();
-        const content = $('p.desc').first().text().trim();
+      let suggestion: string | undefined = undefined;
 
-        this.#results.push({
-          title,
-          link,
-          content,
-          engine: SearchEngine.Qwant
-        });
-      });
+      if (request.data.data.query.queryContext.alteredQuery) {
+        suggestion = request.data.data.query.queryContext.alteredQuery;
+      }
 
       return {
-        results: this.#results,
-        suggestion: this.#suggestion,
+        results: results,
+        suggestion: suggestion,
         error: false
       };
     } catch {
