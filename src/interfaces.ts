@@ -20,12 +20,10 @@ export enum Language {
   'ca-ES',
   'cs-CZ',
   'da-DK',
-  'de',
   'de-AT',
   'de-CH',
   'de-DE',
   'el-GR',
-  'en',
   'en-AU',
   'en-CA',
   'en-GB',
@@ -33,7 +31,6 @@ export enum Language {
   'en-IN',
   'en-NZ',
   'en-US',
-  'es',
   'es-AR',
   'es-CL',
   'es-ES',
@@ -41,7 +38,6 @@ export enum Language {
   'et-EE',
   'fa-IR',
   'fi-FI',
-  'fr',
   'fr-BE',
   'fr-CA',
   'fr-CH',
@@ -58,11 +54,9 @@ export enum Language {
   'lt-LT',
   'lv-LV',
   'nb-NO',
-  'nl',
   'nl-BE',
   'nl-NL',
   'pl-PL',
-  'pt',
   'pt-BR',
   'pt-PT',
   'ro-RO',
@@ -76,7 +70,6 @@ export enum Language {
   'tr-TR',
   'uk-UA',
   'vi-VN',
-  'zh',
   'zh-CN',
   'zh-HK',
   'zh-TW'
@@ -92,7 +85,7 @@ export class Engine {
     query: string,
     page = 1,
     safesearch = SafeSearch.Off,
-    language = Language.en
+    language = Language['en-US']
   ) {
     this.#query = query;
     this.#page = page;
