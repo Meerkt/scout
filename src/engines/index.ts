@@ -240,7 +240,12 @@ class Scout {
     const promiseArray: Promise<EngineAutocompleteResult>[] = [];
     this.#engines.forEach((engine) => {
       promiseArray.push(
-        new engine(this.#query, 1, SafeSearch.Off, Language.en).autocomplete()
+        new engine(
+          this.#query,
+          1,
+          SafeSearch.Off,
+          Language['en-US']
+        ).autocomplete()
       );
     });
 
