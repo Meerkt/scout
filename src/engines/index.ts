@@ -33,7 +33,7 @@ class Scout {
     | typeof Bing
     | typeof Yahoo
     | typeof Wikipedia
-  )[] = [Google, DuckDuckGo, Qwant, Bing, Yahoo, Wikipedia];
+  )[] = [Google, DuckDuckGo, Qwant, Yahoo, Wikipedia];
   #query = '';
   #page = 1;
   #safesearch = SafeSearch.Off;
