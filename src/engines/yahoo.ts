@@ -86,13 +86,15 @@ class Yahoo extends Engine {
       return {
         results: this.#results,
         suggestion: this.#suggestion,
-        error: false
+        error: false,
+        engine: SearchEngine.Yahoo
       };
     } catch {
       return {
         results: [],
         suggestion: undefined,
-        error: true
+        error: true,
+        engine: SearchEngine.Yahoo
       };
     }
   }
@@ -124,12 +126,14 @@ class Yahoo extends Engine {
 
       return {
         results: results,
-        error: false
+        error: false,
+        engine: SearchEngine.Yahoo
       };
     } catch {
       return {
         results: [],
-        error: true
+        error: true,
+        engine: SearchEngine.Yahoo
       };
     }
   }
@@ -170,12 +174,14 @@ class Yahoo extends Engine {
 
       return {
         results: results,
-        error: false
+        error: false,
+        engine: SearchEngine.Yahoo
       };
     } catch {
       return {
         results: [],
-        error: true
+        error: true,
+        engine: SearchEngine.Yahoo
       };
     }
   }
@@ -214,18 +220,20 @@ class Yahoo extends Engine {
 
       return {
         results: results,
-        error: false
+        error: false,
+        engine: SearchEngine.Yahoo
       };
     } catch {
       return {
         results: [],
-        error: true
+        error: true,
+        engine: SearchEngine.Yahoo
       };
     }
   }
 
   async autocomplete(): Promise<EngineAutocompleteResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.Yahoo };
   }
 }
 

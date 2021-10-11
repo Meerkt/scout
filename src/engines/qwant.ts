@@ -114,13 +114,15 @@ class Qwant extends Engine {
       return {
         results: results,
         suggestion: suggestion,
-        error: false
+        error: false,
+        engine: SearchEngine.Qwant
       };
     } catch {
       return {
         results: [],
         suggestion: undefined,
-        error: true
+        error: true,
+        engine: SearchEngine.Qwant
       };
     }
   }
@@ -149,9 +151,9 @@ class Qwant extends Engine {
         }
       );
 
-      return { results: results, error: false };
+      return { results: results, error: false, engine: SearchEngine.Qwant };
     } catch {
-      return { results: [], error: true };
+      return { results: [], error: true, engine: SearchEngine.Qwant };
     }
   }
 
@@ -178,9 +180,9 @@ class Qwant extends Engine {
         });
       });
 
-      return { results, error: false };
+      return { results, error: false, engine: SearchEngine.Qwant };
     } catch {
-      return { results: [], error: true };
+      return { results: [], error: true, engine: SearchEngine.Qwant };
     }
   }
 
@@ -210,9 +212,9 @@ class Qwant extends Engine {
         }
       );
 
-      return { results, error: false };
+      return { results, error: false, engine: SearchEngine.Qwant };
     } catch {
-      return { results: [], error: true };
+      return { results: [], error: true, engine: SearchEngine.Qwant };
     }
   }
 
@@ -234,11 +236,12 @@ class Qwant extends Engine {
         }
       );
 
-      return { results, error: false };
+      return { results, error: false, engine: SearchEngine.Qwant };
     } catch {
       return {
         results: [],
-        error: true
+        error: true,
+        engine: SearchEngine.Qwant
       };
     }
   }

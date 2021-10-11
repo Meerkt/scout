@@ -111,13 +111,15 @@ class Google extends Engine {
       return {
         results: this.#results,
         suggestion: this.#suggestion,
-        error: false
+        error: false,
+        engine: SearchEngine.Google
       };
     } catch {
       return {
         results: [],
         suggestion: undefined,
-        error: true
+        error: true,
+        engine: SearchEngine.Google
       };
     }
   }
@@ -152,9 +154,9 @@ class Google extends Engine {
           engine: SearchEngine.Google
         });
       });
-      return { results: results, error: false };
+      return { results: results, error: false, engine: SearchEngine.Google };
     } catch {
-      return { results: [], error: true };
+      return { results: [], error: true, engine: SearchEngine.Google };
     }
   }
 
@@ -191,9 +193,9 @@ class Google extends Engine {
           engine: SearchEngine.Google
         });
       });
-      return { results: results, error: false };
+      return { results: results, error: false, engine: SearchEngine.Google };
     } catch {
-      return { results: [], error: true };
+      return { results: [], error: true, engine: SearchEngine.Google };
     }
   }
 
@@ -229,9 +231,9 @@ class Google extends Engine {
           engine: SearchEngine.Google
         });
       });
-      return { results: results, error: false };
+      return { results: results, error: false, engine: SearchEngine.Google };
     } catch {
-      return { results: [], error: true };
+      return { results: [], error: true, engine: SearchEngine.Google };
     }
   }
 
@@ -261,12 +263,14 @@ class Google extends Engine {
 
       return {
         results: result,
-        error: false
+        error: false,
+        engine: SearchEngine.Google
       };
     } catch {
       return {
         results: [],
-        error: true
+        error: true,
+        engine: SearchEngine.Google
       };
     }
   }

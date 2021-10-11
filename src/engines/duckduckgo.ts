@@ -16,8 +16,6 @@ import * as cheerio from 'cheerio';
 class DuckDuckGo extends Engine {
   #url: URL = new URL('https://html.duckduckgo.com/html');
   #autocompleteURL = new URL('https://ac.duckduckgo.com/ac/');
-  #results: ParsedResult[] = [];
-  #suggestion?: string;
 
   constructor(
     query: string,
@@ -51,6 +49,21 @@ class DuckDuckGo extends Engine {
 
       let $ = cheerio.load(request.data);
 
+      const suggest = cheerio
+        .load($('div#did_you_mean').first().toString())('a')
+        .first()
+        .text()
+        .trim()
+        .toString();
+
+      let suggestion: string | undefined = undefined;
+
+      if (suggest) {
+        suggestion = suggest;
+      }
+
+      const results: ParsedResult[] = [];
+
       $('div.result').each((_, result) => {
         $ = cheerio.load($(result).toString());
 
@@ -58,7 +71,7 @@ class DuckDuckGo extends Engine {
         const link = $('a.result__url').first().attr('href');
         const content = $('a.result__snippet').first().text().trim();
 
-        this.#results.push({
+        results.push({
           title,
           link,
           content,
@@ -67,29 +80,31 @@ class DuckDuckGo extends Engine {
       });
 
       return {
-        results: this.#results,
-        suggestion: this.#suggestion,
-        error: false
+        results: results,
+        suggestion: suggestion,
+        error: false,
+        engine: SearchEngine.DuckDuckGo
       };
     } catch {
       return {
         results: [],
         suggestion: undefined,
-        error: true
+        error: true,
+        engine: SearchEngine.DuckDuckGo
       };
     }
   }
 
   async search_image(): Promise<EngineImagesResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.DuckDuckGo };
   }
 
   async search_video(): Promise<EngineVideosResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.DuckDuckGo };
   }
 
   async search_news(): Promise<EngineNewsResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.DuckDuckGo };
   }
 
   async autocomplete(): Promise<EngineAutocompleteResult> {
@@ -104,12 +119,14 @@ class DuckDuckGo extends Engine {
 
       return {
         results: request.data[1],
-        error: false
+        error: false,
+        engine: SearchEngine.DuckDuckGo
       };
     } catch {
       return {
         results: [],
-        error: true
+        error: true,
+        engine: SearchEngine.DuckDuckGo
       };
     }
   }

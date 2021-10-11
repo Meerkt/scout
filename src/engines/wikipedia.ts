@@ -52,31 +52,33 @@ class Wikipedia extends Engine {
         results: [],
         suggestion: undefined,
         error: false,
-        infobox
+        infobox,
+        engine: SearchEngine.Wikipedia
       };
     } catch {
       return {
         results: [],
         suggestion: undefined,
-        error: true
+        error: true,
+        engine: SearchEngine.Wikipedia
       };
     }
   }
 
   async search_image(): Promise<EngineImagesResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.Wikipedia };
   }
 
   async search_video(): Promise<EngineVideosResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.Wikipedia };
   }
 
   async search_news(): Promise<EngineNewsResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.Wikipedia };
   }
 
   async autocomplete(): Promise<EngineAutocompleteResult> {
-    return { results: [], error: false };
+    return { results: [], error: false, engine: SearchEngine.Wikipedia };
   }
 }
 

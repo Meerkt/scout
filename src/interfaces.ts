@@ -143,11 +143,13 @@ export interface EngineResult {
   suggestion?: string;
   infobox?: Infobox;
   error: boolean;
+  engine?: SearchEngine;
 }
 
 export interface EngineAutocompleteResult {
   results: string[];
   error: boolean;
+  engine?: SearchEngine;
 }
 
 export interface Results {
@@ -175,6 +177,7 @@ export interface Images {
 export interface EngineImagesResult {
   results: Images[];
   error: boolean;
+  engine?: SearchEngine;
 }
 
 export interface ImageResults {
@@ -195,6 +198,7 @@ export interface Videos {
 export interface EngineVideosResult {
   results: Videos[];
   error: boolean;
+  engine?: SearchEngine;
 }
 
 export interface VideoResults {
@@ -214,6 +218,7 @@ export interface News {
 export interface EngineNewsResult {
   results: News[];
   error: boolean;
+  engine?: SearchEngine;
 }
 
 export interface NewsResults {
