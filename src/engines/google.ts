@@ -221,13 +221,19 @@ class Google extends Engine {
         const url =
           new URL(`https://google.com${link}`).searchParams.get('url') ||
           undefined;
-        const source = $$('span.fYyStc').first().text().trim();
+        const source = $$('span.qXLe6d.dXDvrc').first().text().trim();
+        const description = $$('span.qXLe6d.FrIlee')
+          .first()
+          .find('span.fYyStc:nth-child(3)')
+          .text()
+          .trim();
 
         results.push({
           title,
           source,
           url,
           thumbnail,
+          description,
           engine: SearchEngine.Google
         });
       });

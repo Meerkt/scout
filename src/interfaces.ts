@@ -212,6 +212,7 @@ export interface News {
   url?: string;
   title: string;
   source: string;
+  description: string;
   engine: SearchEngine;
 }
 

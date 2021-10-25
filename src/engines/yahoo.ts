@@ -208,12 +208,14 @@ class Yahoo extends Engine {
         const link = $$('a.thmb').first().attr('href')?.split('/')[7];
         const url = String(querystring.decode(link || '').RU);
         const source = $$('span.s-source').first().text().trim();
+        const description = $$('p.s-desc').first().text().trim();
 
         results.push({
           title,
           source,
           url,
           thumbnail,
+          description,
           engine: SearchEngine.Yahoo
         });
       });

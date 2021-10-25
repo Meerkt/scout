@@ -221,6 +221,7 @@ class Scout {
         !!result.title &&
         !!result.url &&
         !!result.thumbnail &&
+        !!result.source &&
         result.title.length != 0 &&
         result.url?.length != 0 &&
         result.thumbnail.length != 0 &&

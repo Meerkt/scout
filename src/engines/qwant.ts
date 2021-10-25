@@ -207,7 +207,8 @@ class Qwant extends Engine {
             source: item.domain,
             url: item.url,
             thumbnail: item.media[0].pict.url,
-            engine: SearchEngine.Qwant
+            engine: SearchEngine.Qwant,
+            description: ''
           });
         }
       );
