@@ -24,6 +24,7 @@ import Qwant from './qwant';
 import Bing from './bing';
 import Yahoo from './yahoo';
 import Wikipedia from './wikipedia';
+import Brave from './brave';
 
 class Scout {
   #engines: (
@@ -33,7 +34,8 @@ class Scout {
     | typeof Bing
     | typeof Yahoo
     | typeof Wikipedia
-  )[] = [Google, DuckDuckGo, Qwant, Yahoo, Wikipedia];
+    | typeof Brave
+  )[] = [Google, DuckDuckGo, Qwant, Yahoo, Wikipedia, Brave];
   #query = '';
   #page = 1;
   #safesearch = SafeSearch.Off;

@@ -4,7 +4,8 @@ export enum SearchEngine {
   Yahoo,
   Qwant,
   Bing,
-  Wikipedia
+  Wikipedia,
+  Brave
 }
 
 export enum SafeSearch {
