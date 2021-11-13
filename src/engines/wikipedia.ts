@@ -14,6 +14,7 @@ import axios from 'axios';
 
 class Wikipedia extends Engine {
   #url: URL = new URL('https://en.wikipedia.org/api/rest_v1/page/summary/');
+  #autocompleteURL = new URL('https://en.wikipedia.org/w/api.php');
 
   constructor(
     query: string,
@@ -29,6 +30,11 @@ class Wikipedia extends Engine {
     this.#url = new URL(
       `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${query}`
     );
+
+    this.#autocompleteURL.searchParams.set('action', 'opensearch');
+    this.#autocompleteURL.searchParams.set('limit', '10');
+    this.#autocompleteURL.searchParams.set('format', 'json');
+    this.#autocompleteURL.searchParams.set('search', query);
   }
 
   async search(): Promise<EngineResult> {
@@ -78,7 +84,27 @@ class Wikipedia extends Engine {
   }
 
   async autocomplete(): Promise<EngineAutocompleteResult> {
-    return { results: [], error: false, engine: SearchEngine.Wikipedia };
+    try {
+      const request = await axios.get(this.#autocompleteURL.toString(), {
+        timeout: 500,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'
+        }
+      });
+
+      return {
+        results: request.data[1],
+        error: false,
+        engine: SearchEngine.Wikipedia
+      };
+    } catch (e) {
+      return {
+        results: [],
+        error: true,
+        engine: SearchEngine.Wikipedia
+      };
+    }
   }
 }
 
