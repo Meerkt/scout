@@ -144,7 +144,8 @@ class Brave extends Engine {
       const request = await axios.get(this.#videoURL.toString(), {
         timeout: 2000,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)',
+          Cookie: `safesearch=${this.#safesearch};ul_lang=${this.#lang}`
         }
       });
 
@@ -197,7 +198,8 @@ class Brave extends Engine {
       const request = await axios.get(this.#newsURL.toString(), {
         timeout: 2000,
         headers: {
-          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)'
+          'User-Agent': 'Mozilla/5.0 (MSIE 10.0; Windows NT 6.1; Trident/5.0)',
+          Cookie: `safesearch=${this.#safesearch};ul_lang=${this.#lang}`
         }
       });
 
